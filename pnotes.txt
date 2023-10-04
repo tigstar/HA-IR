@@ -90,7 +90,7 @@ result:
 }
 
 2- before executing the second step create fill in the email and username variables , it could be any fake email. but I put mine.
-email: tigsatir@gmail.com , user: elti***
+email: ti****@gmail.com , user: elti***
 
 result:
 {
