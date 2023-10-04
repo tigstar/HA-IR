@@ -1,0 +1,6 @@
+notes.txt
+**/zone1/.terraform
+**/zone2/.terraform
+udacity-*.pem
+**/zone1/.terraform*
+**/zone2/.terraform*

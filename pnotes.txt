@@ -1,0 +1,130 @@
+aws ec2 create-restore-image-task --object-key ami-0ec6fdfb365e5fc00.bin --bucket udacity-srend --name "udacity-eltigani"   
+{
+    "ImageId": "ami-021af0f6c5b395073"
+}
+
+aws ec2 copy-image --source-image-id ami-021af0f6c5b395073 --source-region us-east-1 --region us-east-2 --name "udacity-eltigani"  
+{
+    "ImageId": "ami-01555873be4332c86"
+}
+aws ec2 copy-image --source-image-id ami-021af0f6c5b395073 --source-region us-east-1 --region us-west-1 --name "udacity-eltigani" 
+{
+    "ImageId": "ami-0c2dae90ee0169db4"
+}
+
+note: bucket names have to be unique across all regions
+Create an s3 bucket in us-east-2 as udacity-tf-eltigani-east2 :
+
+aws s3api create-bucket --bucket udacity-tf-east2 --create-bucket-configuration LocationConstraint=us-east-2
+
+
+Create an s3 bucket in us-west-1 as udacity-tf-eltigani-west1 :
+
+aws s3api create-bucket --bucket udacity-tf-west1 --create-bucket-configuration LocationConstraint=us-west-1
+
+
+Create two keypairs one in each region
+
+aws ec2 create-key-pair --key-name udacity --query 'KeyMaterial' --output text > udacity-east2.pem --region=us-east-2
+aws ec2 create-key-pair --key-name udacity --query 'KeyMaterial' --output text > udacity-west1.pem --region=us-west-1
+
+sudo terraform init --plugin-dir /tmp
+
+
+add 
+engine                   = "aurora-mysql"
+for rds
+
+get all supported versions of aurora-mysql
+
+aws rds describe-db-engine-versions --engine "aurora-mysql" --query "DBEngineVersions[].EngineVersion"
+
+change 5.6.mysql_aurora.1.19.1 to one supported such as 5.7.mysql_aurora.2.07.9
+
+change it also in: to : aurora-mysql5.7
+resource "aws_rds_cluster_parameter_group" "cluster_pg" {
+  name   = "udacity-pg-p"
+  family = "aurora5.7"
+
+for kubernetes access replace the args section in the kube profile with: (to fix the unauthenticated error)
+      args:
+      - token
+      - -i
+      - udacity-cluster
+      command: aws-iam-authenticator
+      env:
+      - name: AWS_STS_REGIONAL_ENDPOINTS
+        value: regional
+      - name: AWS_DEFAULT_REGION
+        value: us-east-2
+      provideClusterInfo: false
+
+
+Prometheus , go to prometheus values from github, copy and paste in local values.yaml file and modify the fillowing section to include the additional scrape config file:
+    additionalScrapeConfigsSecret:
+       enabled: true
+       name: additional-scrape-configs
+       key: prometheus-additional.yaml
+
+
+Postman:
+
+1- Import the two postman files into postman and create a variable with the public IP of ubuntu web server which was created earlier
+public-ip. one file has the collection and the other is a template for the envionment varibles. fill out the public-ip value
+then execute the first step to initialize the database
+
+result:
+{
+    "dataset": {
+        "created": "Wed, 04 Oct 2023 08:27:54 GMT",
+        "description": "initialize the DB",
+        "id": 5,
+        "location": "home",
+        "name": "init db"
+    },
+    "status": {
+        "message": "101: Created.",
+        "records": 1,
+        "success": true
+    }
+}
+
+2- before executing the second step create fill in the email and username variables , it could be any fake email. but I put mine.
+email: tigsatir@gmail.com , user: eltigani
+
+result:
+{
+    "dataset": {
+        "created": "Wed, 04 Oct 2023 08:33:16 GMT",
+        "email": "tigsatir@gmail.com",
+        "id": 2,
+        "role": 0,
+        "token": "R6OA0JWTNVKEHO7BN2F4SRJ5F57DKPJ1ERMEUENB7C9DP8P3TN",
+        "username": "eltigani"
+    },
+    "status": {
+        "message": "101: Created.",
+        "records": 1,
+        "success": true
+    }
+}
+
+3- Take the token generated from the previous step in the response body to generate an event in the next call
+
+{
+    "dataset": {
+        "created": "Wed, 04 Oct 2023 08:27:54 GMT",
+        "description": "initialize the DB",
+        "id": 5,
+        "location": "home",
+        "name": "init db"
+    },
+    "status": {
+        "message": "101: Created.",
+        "records": 1,
+        "success": true
+    }
+}
+Now we want to create 100 events so that later on we can see the traffic generated in grafana.
+Go to the top level project , click on the project title: SRE Project in postman and then hit the button RUN
+Deselect the other endpoints and tick only the create events step and set the iterations to be 100
