@@ -90,17 +90,17 @@ result:
 }
 
 2- before executing the second step create fill in the email and username variables , it could be any fake email. but I put mine.
-email: tigsatir@gmail.com , user: eltigani
+email: tigsatir@gmail.com , user: elti***
 
 result:
 {
     "dataset": {
         "created": "Wed, 04 Oct 2023 08:33:16 GMT",
-        "email": "tigsatir@gmail.com",
+        "email": "ti***@gmail.com",
         "id": 2,
         "role": 0,
         "token": "R6OA0JWTNVKEHO7BN2F4SRJ5F57DKPJ1ERMEUENB7C9DP8P3TN",
-        "username": "eltigani"
+        "username": "elti***"
     },
     "status": {
         "message": "101: Created.",
@@ -125,6 +125,12 @@ result:
         "success": true
     }
 }
-Now we want to create 100 events so that later on we can see the traffic generated in grafana.
+4- Now we want to create 100 events so that later on we can see the traffic generated in grafana.
 Go to the top level project , click on the project title: SRE Project in postman and then hit the button RUN
 Deselect the other endpoints and tick only the create events step and set the iterations to be 100
+
+add the repo to github:
+git remote add origin git@gh_personal:tigstar/HA-IR.git
+
+where gh_personal is a local ssh configuration
+
