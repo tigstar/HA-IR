@@ -26,6 +26,9 @@ resource "aws_rds_cluster" "udacity_cluster-s" {
   cluster_identifier       = "udacity-db-cluster-s"
   availability_zones       = ["us-west-1b"]
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.cluster_pg-s.name
+  database_name            = "udacity_replica"
+  master_username          = "udacity"
+  master_password          = "MyUdacityPassword"
   vpc_security_group_ids   = [aws_security_group.db_sg_2.id]
   db_subnet_group_name     = aws_db_subnet_group.udacity_db_subnet_group.name
   engine_mode              = "provisioned"
@@ -41,6 +44,7 @@ resource "aws_rds_cluster_instance" "udacity_instance-s" {
   identifier           = "udacity-db-instance-${count.index}-s"
   cluster_identifier   = aws_rds_cluster.udacity_cluster-s.id
   instance_class       = "db.t2.small"
+  engine               = "aurora-mysql"
   db_subnet_group_name = aws_db_subnet_group.udacity_db_subnet_group.name
 }
 
