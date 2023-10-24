@@ -46,6 +46,9 @@ resource "aws_rds_cluster_parameter_group" "cluster_pg" {
   name   = "udacity-pg-p"
   family = "aurora5.7"
 
+added replication parameters to RDS
+
+aws eks update-kubeconfig --name udacity-cluster --region us-east-2
 for kubernetes access replace the args section in the kube profile with: (to fix the unauthenticated error)
       args:
       - token

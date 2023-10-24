@@ -9,8 +9,8 @@ us-west-1 : us-west-1b, us-west-1c
 ### Table 1.1 Summary
 | Asset | Purpose | Size | Qty | DR |
 |-------|---------|------|-----|----|
-| EC2 | Hosting a business application | t3.micro | 2 | Created in us-east-2 |
-| EC2 | Hosting a business application | t3.micro | 2 | Replica in us-west-1 |
+| EC2 | Hosting a business application | t3.micro | 3 | Created in us-east-2 |
+| EC2 | Hosting a business application | t3.micro | 3 | Replica in us-west-1 |
 | EKS | For monitoring stack | t3.medium | 2 nodes cluster | Created in us-east-2 |
 | EKS | For monitoring stack | t3.medium | 2 nodes cluster | Replica in us-west-1 |
 | VPC | Virtual private network | 3 subnets | 1 | Created in different availability zones us-east-2a, us-east-2b, us-east-2c |
